@@ -1,3 +1,5 @@
+import * as readline from "node:readline";
+
 class TrieNode {
   children: Record<string, TrieNode>;
 
@@ -46,7 +48,7 @@ function insert(rootNode: TrieNode, str: string) {
     if (currentNode.children[char]) {
       currentNode = currentNode.children[char];
     } else {
-      currentNode.children[char] = new TrieNode(); // set the key (which doesn't exist) to be char 'o' in this case
+      currentNode.children[char] = new TrieNode(); // set the new key (which doesn't exist) to be char 'o' in this case
       currentNode = currentNode.children[char]; // follow new node. i.e. o's children: ugh
     }
   }
@@ -64,8 +66,8 @@ function collectAllWords(
   let currentNode = node;
 
   for (const key in currentNode.children) {
-    const node = currentNode.children[key];
     // loop through Record keys using for... in
+    const node = currentNode.children[key];
     if (key === "*") {
       // end of word
       words.push(word);
@@ -91,4 +93,78 @@ function autocomplete(rootNode: TrieNode, prefix: string) {
 // console.log(search(trie.rootNode, "cab"));
 // console.log(JSON.stringify(insert(trie.rootNode, "cough"), null, 2));
 // console.log(collectAllWords(trie.rootNode));
-console.log(autocomplete(trie.rootNode, "ca"));
+// console.log(autocomplete(trie.rootNode, "ca"));
+
+function traverse(node: TrieNode) {
+  let currentNode = node;
+
+  for (const key in currentNode.children) {
+    console.log(key);
+
+    traverse(currentNode.children[key]);
+  }
+}
+
+// traverse(trie.rootNode);
+
+function autocorrect(node: TrieNode, searchTerm: string) {
+  let wordFoundSoFar = "";
+  let currentNode = node;
+
+  for (const char of searchTerm) {
+    if (node.children[char]) {
+      wordFoundSoFar += char;
+      currentNode = node.children[char];
+    } else {
+      return wordFoundSoFar + collectAllWords(currentNode)[0];
+    }
+  }
+
+  return searchTerm;
+}
+
+console.log(autocorrect(trie.rootNode, "cax"));
+
+function commandLineAutoComplete() {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    prompt: ">",
+  });
+
+  rl.prompt();
+  let currentInput = "";
+
+  rl.on("line", (line) => {
+    currentInput = line.trim();
+    console.log(`You entered: ${currentInput}`);
+    rl.prompt();
+  });
+
+  process.stdin.setRawMode(true);
+  // process.stdin.resume();
+  // process.stdin.setEncoding("utf8");
+
+  process.stdin.on("data", (char: string) => {
+    // Handle backspace
+    if (char === "\u0008" || char === "\u007f") {
+      currentInput = currentInput.slice(0, -1);
+    }
+
+    currentInput += char;
+
+    // Fetch and display suggestions
+    const suggestions = autocomplete(trie.rootNode, currentInput);
+    if (suggestions.length > 0) {
+      console.clear();
+      console.log(
+        `Suggestions for "${currentInput}": ${suggestions.join(", ")}`
+      );
+    }
+
+    // Keep the prompt visible
+    rl.prompt(true);
+  });
+}
+
+// commandLineAutoComplete();
