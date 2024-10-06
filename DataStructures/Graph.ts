@@ -143,9 +143,10 @@ function bfs3(startingVertex: Vertex, searchValue: string) {
       if (adjacentVertex.value == searchValue) return adjacentVertex;
       if (map[adjacentVertex.value]) continue;
       queue.push(adjacentVertex);
+      map[adjacentVertex.value] = true;
     }
   }
   return undefined;
 }
 
-// console.log(bfs3(alice, sam.value));
+console.log(bfs3(alice, sam.value));

@@ -114,16 +114,14 @@ function traverse(node: TreeNode) {
     return;
   }
   traverse(node.leftChild!);
-
-  traverse(node.rightChild!);
   console.log(node.value);
+  traverse(node.rightChild!);
 }
 
 const treeNode1 = new TreeNode(1);
-const treeNode3 = new TreeNode(5);
-const treeNode2 = new TreeNode(2, undefined, treeNode3);
-const root = new TreeNode(3, treeNode1, treeNode2);
-
+const treeNode3 = new TreeNode(3);
+const root = new TreeNode(2, treeNode1, treeNode3);
+console.log(root);
 // console.log(search(root, 5));
 // console.log(insert(root, new TreeNode(10)));
 

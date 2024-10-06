@@ -1,16 +1,4 @@
-const a = ["a", "b", "c"];
-const b = ["a", "b", "c", "d"];
-
 const hashmap = new Map<string, boolean>();
+["a", "b", "c"].forEach((i) => hashmap.set(i, true));
 
-a.forEach((v) => {
-  hashmap.set(v, true);
-});
-
-function c() {
-  return b.every((v) => hashmap.has(v));
-}
-
-console.log(c());
-
-export {};
+console.log(["a", "b", "c", "d"].every((v) => hashmap.has(v)));
