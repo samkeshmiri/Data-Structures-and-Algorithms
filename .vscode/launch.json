@@ -1,17 +1,16 @@
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
-      "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/src/fuzzy.ts",
-      "outFiles": ["${workspaceFolder}/**/*.js"],
-      "runtimeExecutable": "ts-node"
+      "name": "Debug file",
+      "program": "${file}",
+      "runtimeArgs": ["-r", "ts-node/register"],
+      "env": {
+        "NODE_PATH": "/Users/skeshmiri/.nvm/versions/node/v20.18.0/lib/node_modules"
+      },
+      "skipFiles": ["<node_internals>/**"]
     }
   ]
 }

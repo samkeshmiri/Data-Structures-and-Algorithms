@@ -1,4 +1,4 @@
-import { Stack } from "../DataStructures/Stack";
+import { Stack } from "../data-structures/Stack";
 
 function reverseString(str: string) {
   const stack = new Stack();

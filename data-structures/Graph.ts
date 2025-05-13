@@ -1,19 +1,11 @@
 class Vertex {
   adjacentVertices: Vertex[] = [];
-  constructor(readonly value: any) {}
+  constructor(readonly name: string) {}
 
   addAdjacentVertex(vertex: Vertex) {
     this.adjacentVertices.push(vertex);
   }
 }
-
-const alice = new Vertex("alice");
-const bob = new Vertex("bob");
-const sam = new Vertex("sam");
-
-alice.addAdjacentVertex(bob);
-bob.addAdjacentVertex(alice);
-bob.addAdjacentVertex(sam);
 
 // vertex, search value, traversed map
 // if vertex has search value, return it
@@ -29,12 +21,12 @@ function dfs(vertex: Vertex, searchValue: any, visitedVertices: {} = {}) {
 
   // add the value of the node as the key of the map and true as the value
   // so that it is marked as traversed
-  visitedVertices[vertex.value] = true;
+  visitedVertices[vertex.name] = true;
 
   // loop through the adjacent vertices,
   for (const adjacentVertex of vertex.adjacentVertices) {
     // if it's already marked as true then it's been checked
-    if (visitedVertices[adjacentVertex.value]) continue;
+    if (visitedVertices[adjacentVertex.name]) continue;
 
     // if found, return it
     if (adjacentVertex == searchValue) {
@@ -53,8 +45,6 @@ function dfs(vertex: Vertex, searchValue: any, visitedVertices: {} = {}) {
   return undefined;
 }
 
-console.log(dfs(alice, sam));
-
 // add starting vertex to has table and mark as visited
 // add it to a queue
 // loop while queue not empty
@@ -69,7 +59,7 @@ function bfs(startVertex: Vertex, searchValue: string): Vertex | undefined {
 
   queue.push(startVertex);
 
-  visitedVertices[startVertex.value] = true;
+  visitedVertices[startVertex.name] = true;
 
   while (queue.length > 0) {
     const currentVertex = queue.shift();
@@ -79,9 +69,9 @@ function bfs(startVertex: Vertex, searchValue: string): Vertex | undefined {
     }
 
     for (const adjacentVertex of currentVertex.adjacentVertices) {
-      if (visitedVertices[adjacentVertex.value]) continue;
-      if (adjacentVertex.value === searchValue) return adjacentVertex;
-      visitedVertices[adjacentVertex.value] = true;
+      if (visitedVertices[adjacentVertex.name]) continue;
+      if (adjacentVertex.name === searchValue) return adjacentVertex;
+      visitedVertices[adjacentVertex.name] = true;
       queue.push(adjacentVertex);
     }
   }
@@ -100,17 +90,17 @@ function bfs2(startingVertex: Vertex, searchValue: string) {
   let map: { [value: string]: boolean } = {};
   let queue: Vertex[] = [];
 
-  map[startingVertex.value] = true;
+  map[startingVertex.name] = true;
   queue.push(startingVertex);
 
-  if (startingVertex.value === searchValue) return startingVertex;
+  if (startingVertex.name === searchValue) return startingVertex;
 
   while (queue.length > 0) {
     let currentVertex = queue.shift();
     for (const adjacentVertex of currentVertex!.adjacentVertices) {
-      if (map[adjacentVertex.value]) continue;
-      if (adjacentVertex.value == searchValue) return adjacentVertex;
-      map[adjacentVertex.value] = true;
+      if (map[adjacentVertex.name]) continue;
+      if (adjacentVertex.name == searchValue) return adjacentVertex;
+      map[adjacentVertex.name] = true;
       queue.push(adjacentVertex);
     }
   }
@@ -134,19 +124,52 @@ function bfs3(startingVertex: Vertex, searchValue: string) {
   const map: { [value: string]: boolean } = {};
   queue.push(startingVertex);
 
-  map[startingVertex.value] = true;
+  map[startingVertex.name] = true;
 
   while (queue[0]) {
     let currentVertex = queue.shift();
 
     for (const adjacentVertex of currentVertex!.adjacentVertices) {
-      if (adjacentVertex.value == searchValue) return adjacentVertex;
-      if (map[adjacentVertex.value]) continue;
+      if (adjacentVertex.name == searchValue) return adjacentVertex;
+      if (map[adjacentVertex.name]) continue;
       queue.push(adjacentVertex);
-      map[adjacentVertex.value] = true;
+      map[adjacentVertex.name] = true;
     }
   }
   return undefined;
 }
 
-console.log(bfs3(alice, sam.value));
+const alice = new Vertex("alice");
+const bob = new Vertex("bob");
+const sam = new Vertex("sam");
+
+alice.addAdjacentVertex(bob);
+bob.addAdjacentVertex(alice);
+bob.addAdjacentVertex(sam);
+
+function bfs4(vertex: Vertex, searchValue: string) {
+  const queue: Vertex[] = [];
+  const visited: { [key: string]: boolean } = {};
+
+  queue.push(vertex);
+  visited[vertex.name] = true;
+
+  while (queue.length) {
+    const currentVertex = queue.shift();
+
+    for (const adjacentVertex of currentVertex.adjacentVertices) {
+      if (adjacentVertex.name === searchValue) {
+        return adjacentVertex;
+      }
+
+      if (!visited[adjacentVertex.name]) {
+        visited[adjacentVertex.name] = true;
+        queue.push(adjacentVertex);
+      }
+    }
+  }
+
+  return undefined;
+}
+
+console.log(bfs4(alice, "sam"));

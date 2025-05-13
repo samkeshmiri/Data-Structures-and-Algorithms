@@ -8,7 +8,7 @@ export class DoubleLinkedListNode {
   }
 }
 
-export class DoublyLinkedList {
+export class  DoublyLinkedList {
   private firstNode: DoubleLinkedListNode;
   private lastNode: DoubleLinkedListNode;
 
